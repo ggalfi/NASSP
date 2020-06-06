@@ -924,6 +924,7 @@ void LEM::JoystickTimestep(double simdt)
 			}
 			dx8_joystick[rhc_id]->GetDeviceState(sizeof(dx8_jstate[rhc_id]), &dx8_jstate[rhc_id]);
 			// Z-axis read.
+			rhc_rot_id = 0;
 			int rhc_rot_pos = 32768; // Initialize to centered
 			if (rhc_rot_id != -1) { // If this is a rotator-type axis
 				switch (rhc_rot_id) {
@@ -935,6 +936,7 @@ void LEM::JoystickTimestep(double simdt)
 					rhc_rot_pos = dx8_jstate[rhc_id].lRz; break;
 				}
 			}
+			
 			if (rhc_rzx_id != -1 && rhc_rot_id == -1) { // If we use the native Z-axis
 				rhc_rot_pos = dx8_jstate[rhc_id].lZ;
 			}
@@ -946,7 +948,7 @@ void LEM::JoystickTimestep(double simdt)
 			//Let's cheat and give the ACA a throttle lever, if the joystick has one
 			if (rhc_sld_id != -1)
 			{
-				ttca_throttle_pos = dx8_jstate[rhc_id].rglSlider[rhc_sld_id];
+				ttca_throttle_pos = 65535-dx8_jstate[rhc_id].lZ;
 				ttca_throttle_pos_dig = (65536.0 - (double)ttca_throttle_pos) / 65536.0;
 			}
 
